@@ -1,0 +1,12 @@
+{
+  "users": {
+    "demo": {
+      "id": 1,
+      "username": "demo",
+      "password": "demo123",
+      "email": "demo@roadside.com",
+      "phone": "1234567890"
+    }
+  },
+  "user_id_counter": 2
+}

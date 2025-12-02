@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmed - Roadside Assistant</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .confirmation-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: var(--spacing-lg);
+        }
+
+        .confirmation-card {
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .success-icon {
+            font-size: 5rem;
+            margin-bottom: var(--spacing-lg);
+            animation: pulse 1s ease-in-out;
+        }
+
+        .confirmation-title {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, var(--success), var(--primary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .booking-details {
+            background: var(--bg-glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            margin: var(--spacing-xl) 0;
+            text-align: left;
+        }
+
+        .detail-section {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .detail-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            color: var(--primary-light);
+            font-weight: 600;
+            margin-bottom: var(--spacing-sm);
+            font-size: 1.1rem;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--spacing-xs) 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: var(--text-muted);
+        }
+
+        .detail-value {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .booking-id {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--radius-md);
+            display: inline-block;
+            margin: var(--spacing-md) 0;
+            font-weight: 600;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: var(--spacing-sm);
+            justify-content: center;
+            margin-top: var(--spacing-xl);
+        }
+
+        .info-box {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--success);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            margin-top: var(--spacing-lg);
+        }
+
+        .info-box p {
+            color: var(--text-secondary);
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="confirmation-container fade-in">
+        <div class="confirmation-card glass-card">
+            <div class="success-icon">✅</div>
+            <h1 class="confirmation-title">Booking Confirmed!</h1>
+            <p style="color: var(--text-secondary); font-size: 1.1rem;">
+                Your repair service has been successfully booked
+            </p>
+
+            <div class="booking-id">
+                Booking ID: #{{ booking.id }}
+            </div>
+
+            <div class="booking-details">
+                <div class="detail-section">
+                    <div class="section-title">Vehicle Information</div>
+                    <div class="detail-row">
+                        <span class="detail-label">Type</span>
+                        <span class="detail-value">{{ booking.vehicle.type }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Company</span>
+                        <span class="detail-value">{{ booking.vehicle.company }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Model</span>
+                        <span class="detail-value">{{ booking.vehicle.model }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Year</span>
+                        <span class="detail-value">{{ booking.vehicle.year }}</span>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <div class="section-title">Issue Reported</div>
+                    <div class="detail-row">
+                        <span class="detail-label">Problem</span>
+                        <span class="detail-value">{{ booking.issue }}</span>
+                    </div>
+                    {% if booking.customIssue %}
+                    <div class="detail-row">
+                        <span class="detail-label">Details</span>
+                        <span class="detail-value">{{ booking.customIssue }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="detail-section">
+                    <div class="section-title">Service Center</div>
+                    <div class="detail-row">
+                        <span class="detail-label">Name</span>
+                        <span class="detail-value">{{ booking.serviceCenter.name }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Address</span>
+                        <span class="detail-value">{{ booking.serviceCenter.address }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Phone</span>
+                        <span class="detail-value">{{ booking.serviceCenter.phone }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Distance</span>
+                        <span class="detail-value">{{ booking.serviceCenter.distance }} km</span>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <div class="section-title">Booking Status</div>
+                    <div class="detail-row">
+                        <span class="detail-label">Status</span>
+                        <span class="detail-value" style="color: var(--warning);">{{ booking.status }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <p>
+                    <strong>📞 Next Steps:</strong> The service center will contact you shortly to confirm the
+                    appointment time.
+                    You can also call them directly at <strong>{{ booking.serviceCenter.phone }}</strong>.
+                </p>
+            </div>
+
+            <div class="action-buttons">
+                <a href="tel:{{ booking.serviceCenter.phone }}" class="btn btn-secondary">
+                    📞 Call Service Center
+                </a>
+                <a href="{{ url_for('dashboard') }}" class="btn btn-primary">
+                    🏠 Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Centers - Roadside Assistant</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .header {
+            background: var(--bg-glass);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: var(--spacing-md) 0;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-lg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .vehicle-info {
+            background: var(--bg-glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .vehicle-info h3 {
+            margin-bottom: var(--spacing-md);
+            color: var(--primary-light);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .info-value {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .service-card {
+            background: var(--bg-glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-md);
+            transition: all var(--transition-normal);
+        }
+
+        .service-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .service-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .service-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .distance-badge {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: var(--radius-full);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .service-details {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .detail-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: var(--spacing-xs);
+            color: var(--text-secondary);
+        }
+
+        .detail-icon {
+            margin-right: var(--spacing-xs);
+        }
+
+        .service-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+
+        .no-services {
+            text-align: center;
+            padding: var(--spacing-xl);
+        }
+
+        .no-services-icon {
+            font-size: 4rem;
+            margin-bottom: var(--spacing-md);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="header-content">
+            <h1 class="header-title">🚗 Roadside Assistant</h1>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-secondary" style="padding: 0.5rem 1.5rem;">New
+                Search</a>
+        </div>
+    </div>
+
+    <div class="container fade-in">
+        <div class="vehicle-info">
+            <h3>Your Request</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Vehicle</span>
+                    <span class="info-value">{{ vehicle.type }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Company</span>
+                    <span class="info-value">{{ vehicle.company }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Model</span>
+                    <span class="info-value">{{ vehicle.model }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Year</span>
+                    <span class="info-value">{{ vehicle.year }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Issue</span>
+                    <span class="info-value">{{ issue }}</span>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="mb-2">Nearby Service Centers</h2>
+
+        {% if serviceCenters|length == 0 %}
+        <div class="glass-card no-services">
+            <div class="no-services-icon">🔍</div>
+            <h3>No Service Centers Found</h3>
+            <p style="color: var(--text-muted); margin-top: var(--spacing-sm);">
+                We couldn't find any service centers matching your criteria in your area.
+            </p>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-primary mt-2">Try New Search</a>
+        </div>
+        {% endif %}
+
+        {% for service in serviceCenters %}
+        <div class="service-card">
+            <div class="service-header">
+                <div>
+                    <div class="service-name">{{ service.name }}</div>
+                    <div class="detail-row">
+                        <span class="detail-icon">📍</span>
+                        <span>{{ service.address }}</span>
+                    </div>
+                </div>
+                <div class="distance-badge">{{ service.distance }} km</div>
+            </div>
+
+            <div class="service-details">
+                <div class="detail-row">
+                    <span class="detail-icon">📞</span>
+                    <span>{{ service.phone }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-icon">🔧</span>
+                    <span>Specializes in: <strong>{{ service.company }}</strong></span>
+                </div>
+            </div>
+
+            <div class="service-actions">
+                <a href="tel:{{ service.phone }}" class="btn btn-secondary">
+                    📞 Call Now
+                </a>
+                <form action="{{ url_for('book_service') }}" method="post" style="display: inline;">
+                    <input type="hidden" name="serviceCenterId" value="{{ service.id }}">
+                    <button type="submit" class="btn btn-primary">
+                        📅 Book Repair
+                    </button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+
+</html>
